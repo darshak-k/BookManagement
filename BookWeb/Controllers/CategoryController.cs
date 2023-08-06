@@ -38,6 +38,8 @@ namespace BookWeb.Controllers
             {
                 _context.Categories.Add(obj);
                 _context.SaveChanges();
+				TempData["success"] = "Category created succssfully!!";
+
                 return RedirectToAction("Index");
             }
             return View(obj);
@@ -81,26 +83,50 @@ namespace BookWeb.Controllers
 		}
 
 
-        public IActionResult Delete(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
+		public IActionResult Delete(int? id)
+		{
+			if (id == null || id == 0)
+			{
+				return NotFound();
+			}
 
-            var CategoryFromDb = _context.Categories.Find(id);
-            //var CategoryFromDbFromFirst = _context.Categories.FirstOrDefault(u => u.Id == id);
-            //var CategoryFromDbFromSingle = _context.Categories.SingleOrDefault(u => u.Id == id);
+			var CategoryFromDb = _context.Categories.Find(id);
+			//var CategoryFromDbFromFirst = _context.Categories.FirstOrDefault(u => u.Id == id);
+			//var CategoryFromDbFromSingle = _context.Categories.SingleOrDefault(u => u.Id == id);
 
-            if (CategoryFromDb == null)
-            {
-                return NotFound();
-            }
+			if (CategoryFromDb == null)
+			{
+				return NotFound();
+			}
+			return View(CategoryFromDb);
+		}
 
-            _context.Categories.Remove(CategoryFromDb);
-            _context.SaveChanges();
+		//POST
+		[HttpPost, ]
+		[ValidateAntiForgeryToken]
+		public IActionResult DeletePOST(int? id)
+		{
 
-            return RedirectToAction("Index");
-        }
-    }
+			if (id == null || id == 0)
+			{
+				return NotFound();
+			}
+
+			var CategoryFromDb = _context.Categories.Find(id);
+			//var CategoryFromDbFromFirst = _context.Categories.FirstOrDefault(u => u.Id == id);
+			//var CategoryFromDbFromSingle = _context.Categories.SingleOrDefault(u => u.Id == id);
+
+			if (CategoryFromDb == null)
+			{
+				return NotFound();
+			}
+		
+			_context.Categories.Remove(CategoryFromDb);
+			_context.SaveChanges();
+			TempData["success"] = "Category deleted succssfully!!";
+
+			return RedirectToAction("Index");
+	
+		}
+	}
 }
